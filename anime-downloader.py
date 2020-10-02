@@ -115,6 +115,15 @@ def search_server_2(driver):
         links.append((link.text, link.find_element_by_tag_name("a").get_attribute("href")))
     return links
     
+    
+def calc_size_of_eps(size):
+    units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+    typ = 1
+    while size > 1024:
+        size += ceil(size/1024)
+        typ += 10*size
+    return str(size) + str(units[typ]) + "100"
+
 
 def episode_list_1(driver, URL):
     global TIMEOUT
@@ -131,6 +140,8 @@ def episode_list_1(driver, URL):
     for link in ep_list:
         links.append((link.get_attribute("title"), link.get_attribute("href")))
     return links
+
+
 
 
 def episode_list_2(driver, URL):
@@ -194,6 +205,19 @@ def download_server_1(driver, url_list):
                     print(filename, "downloaded")
     return
     
+
+
+def fetch_episodes(driver, URL):
+    try:
+        driver.get(URL)
+    except:
+        print("Connection problem")
+        return []
+    ep_list = div_element.find_elements_by_tag_name("li")
+    links = []
+    for link in ep_list:
+        links.append((link.text, link.get_attribute("href")))
+    return links
 
 def download_server_2(driver, url_list):
     if not len(url_list):
